@@ -27,19 +27,43 @@ app.use(
     ].join(" ")
   )
 )
-const script = `<p>The Phonebook has info for ${Person.length} people </p>
+// let NumberPerson = 0
+
+// Person.countDocuments({})
+//   .then((count) => {
+//     NumberPerson = count
+//     console.log(`Total persons: ${NumberPerson}`)
+//   })
+//   .catch((error) => {
+//     console.error("Error counting persons:", error)
+//   })
+
+// const script = `<p>The Phonebook has info for ${NumberPerson} people </p>
+
+// <p>${new Date()}</p>
+// `
+app.get("/info", (req, res) => {
+  let NumberPerson = 0
+
+  Person.countDocuments({})
+    .then((count) => {
+      NumberPerson = count
+      const script = `<p>The Phonebook has info for ${NumberPerson} people </p>
 
 <p>${new Date()}</p>
 `
-app.get("/info", ( res) => {
-  res.send(script)
+      res.send(script)
+    })
+    .catch((error) => {
+      console.error("Error counting persons:", error)
+    })
 })
 
-app.get("/", ( res) => {
+app.get("/", (req, res) => {
   res.send("<h1>Hello World</h1>")
 })
 
-app.get("/api/persons", ( response) => {
+app.get("/api/persons", (request, response) => {
   Person.find({}).then((persons) => {
     response.json(persons)
   })
@@ -106,13 +130,13 @@ app.post("/api/persons", (req, res, next) => {
     .catch((error) => next(error))
 })
 
-const unknownEndpoint = (response) => {
+const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" })
 }
 
 app.use(unknownEndpoint)
 
-const errorHandler = (error, response, next) => {
+const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if (error.name === "CastError") {

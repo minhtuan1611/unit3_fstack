@@ -21,6 +21,7 @@ function validateNumber(number) {
   return numex.test(number)
 }
 
+
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
